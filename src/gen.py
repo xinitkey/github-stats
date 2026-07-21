@@ -90,9 +90,9 @@ def get_inserted_styles() -> Dict[str, Dict[str, str]]:
             _both_properties = "".join([f"\t{prop}: {val};\n" for prop, val in _both])
             _light_properties = "".join([f"\t{prop}: {val};\n" for prop, val in _light])
             _dark_properties = "".join([f"\t{prop}: {val};\n" for prop, val in _dark])
-            light_styles[
-                key
-            ] = f"{_selector} {{\n{_both_properties}{_light_properties}}}"
+            light_styles[key] = (
+                f"{_selector} {{\n{_both_properties}{_light_properties}}}"
+            )
             dark_styles[key] = f"{_selector} {{\n{_both_properties}{_dark_properties}}}"
 
         for prop, val in _light:
@@ -142,14 +142,11 @@ async def generate_image(template_name: str, s: Stats, output_path: str) -> None
             for lang, data in sorted_languages
         )
 
-        lang_list = "".join(
-            f"""<li>
+        lang_list = "".join(f"""<li>
 <svg xmlns="http://www.w3.org/2000/svg" class="octicon" style="fill:{data.get("color", "#000000")};" viewBox="0 0 16 16" width="16" height="16"><circle xmlns="http://www.w3.org/2000/svg" cx="8" cy="9" r="5" /></svg>
 <span class="lang">{lang}</span>
 <span class="percent">{data.get("prop", 0):0.2f}%</span>
-</li>"""
-            for lang, data in sorted_languages
-        )
+</li>""" for lang, data in sorted_languages)
 
         replacements.update({"progress": progress, "lang_list": lang_list})
     output = replace_with_data(replacements, template)
